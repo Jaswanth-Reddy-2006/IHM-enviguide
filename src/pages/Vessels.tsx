@@ -274,12 +274,10 @@ export default function Vessels() {
 
                         <div className="form-actions-premium">
                             <button type="button" className="action-btn-p cancel-p" onClick={() => handleVesselSelect(vesselList[0])}>
-                                <X size={20} />
-                                <span>Cancel</span>
+                                <X size={24} />
                             </button>
                             <button type="submit" className="action-btn-p submit-p">
-                                <Check size={20} />
-                                <span>Save Changes</span>
+                                <Check size={24} />
                             </button>
                         </div>
                     </form>
@@ -289,60 +287,70 @@ export default function Vessels() {
     };
 
     return (
-        <div className="dashboard-wrapper">
+        <div className="dashboard-wrapper vessels-page-container">
             <Sidebar />
-            <main className="main-content">
+            <main className="main-content vessel-page-main">
                 <Header />
                 <div className="vessels-wrapper">
-                    <aside className="secondary-sidebar">
-                        <div className="vessel-search-container">
-                            <div className="vessel-search-box">
-                                <Search size={16} color="#94A3B8" />
-                                <input
-                                    type="text"
-                                    placeholder="Search vessels..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="vessel-list">
-                            {filteredVessels.map((vessel) => (
-                                <div
-                                    key={vessel.name}
-                                    className={`vessel-item ${activeVesselName === vessel.name ? 'active' : ''}`}
-                                    onClick={() => handleVesselSelect(vessel)}
-                                >
-                                    <div className={`vessel-status-dot ${vessel.name === 'ACOSTA' ? 'v-active' : ''}`}></div>
-                                    <div className="vessel-info-block">
-                                        <h4>{vessel.name}</h4>
-                                        <p>IMO {vessel.imoNo}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <button className="add-vessel-btn" onClick={handleAddClick}>
-                            <Plus size={20} />
-                            Add Vessel
-                        </button>
-                    </aside>
-
-                    <div className="vessels-main">
-                        <nav className="content-tabs">
+                    {/* Full-width Tabs Header */}
+                    <nav className="content-tabs-full">
+                        <div className="tabs-scroll-container">
                             {tabs.map(tab => (
                                 <div
                                     key={tab.id}
-                                    className={`tab-item ${activeTab === tab.id ? 'active' : ''}`}
+                                    className={`tab-item-p ${activeTab === tab.id ? 'active' : ''}`}
                                     onClick={() => setActiveTab(tab.id)}
                                 >
                                     <tab.icon size={18} />
-                                    {tab.label}
+                                    <span>{tab.label}</span>
                                 </div>
                             ))}
-                        </nav>
-                        {renderContent()}
+                        </div>
+                    </nav>
+
+                    <div className="vessels-content-layout">
+                        {/* Secondary Sidebar */}
+                        <aside className="secondary-sidebar">
+                            <div className="vessel-search-container">
+                                <div className="vessel-search-box">
+                                    <Search size={16} color="#94A3B8" />
+                                    <input
+                                        type="text"
+                                        placeholder="Search vessels..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="vessel-list">
+                                {filteredVessels.map((vessel) => (
+                                    <div
+                                        key={vessel.name}
+                                        className={`vessel-item ${activeVesselName === vessel.name ? 'active' : ''}`}
+                                        onClick={() => handleVesselSelect(vessel)}
+                                    >
+                                        <div className={`vessel-status-dot ${vessel.name === 'ACOSTA' ? 'v-active' : ''}`}></div>
+                                        <div className="vessel-info-block">
+                                            <h4>{vessel.name}</h4>
+                                            <p>IMO {vessel.imoNo}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="sidebar-footer">
+                                <button className="add-vessel-btn-large" onClick={handleAddClick}>
+                                    <Plus size={20} />
+                                    Add Vessel
+                                </button>
+                            </div>
+                        </aside>
+
+                        {/* Main Section */}
+                        <div className="vessels-main">
+                            {renderContent()}
+                        </div>
                     </div>
                 </div>
             </main>

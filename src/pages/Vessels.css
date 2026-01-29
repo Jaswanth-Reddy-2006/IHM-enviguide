@@ -1,37 +1,110 @@
 .vessels-wrapper {
     display: flex;
-    min-height: 100vh;
-    background-color: #F8FAFC;
+    flex-direction: column;
+    height: calc(100vh - var(--header-height));
+    background-color: #f1f5f9;
+}
+
+.vessels-page-container {
+    height: 100vh !important;
+    overflow: hidden !important;
+    width: 100vw;
+}
+
+.vessel-page-main {
+    padding: 0 !important;
+    overflow: hidden !important;
+    height: 100vh;
+}
+
+.vessel-page-main .dashboard-header {
+    border-bottom: none;
+}
+
+/* New Full Width Tabs */
+.content-tabs-full {
+    background: white;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.tabs-scroll-container {
+    display: flex;
+    padding: 0 20px;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Hide for Firefox */
+    -ms-overflow-style: none;
+    /* Hide for IE/Edge */
+}
+
+.tabs-scroll-container::-webkit-scrollbar {
+    display: none;
+    /* Hide for Chrome/Safari */
+}
+
+.tab-item-p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 24px;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-item-p:hover {
+    color: var(--primary-blue);
+}
+
+.tab-item-p.active {
+    color: var(--primary-blue);
+    background: #f0f9ff;
+    border-bottom-color: var(--primary-blue);
+}
+
+/* Removed tabs-progress-bar styles */
+
+/* Layout Container */
+.vessels-content-layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
 }
 
 /* Secondary Sidebar */
 .secondary-sidebar {
-    width: 280px;
+    width: 320px;
     background-color: #0F172A;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    position: sticky;
-    top: 0;
     border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .vessel-search-container {
-    padding: 24px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
 }
 
 .vessel-search-box {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
-    padding: 12px 16px;
-    gap: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 10px;
 }
 
 .vessel-search-box input {
-    background: none;
+    background: transparent;
     border: none;
     color: white;
     font-size: 14px;
@@ -45,148 +118,118 @@
 .vessel-list {
     flex: 1;
     overflow-y: auto;
+    padding: 10px 0;
 }
 
 .vessel-item {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 15px;
+    padding: 16px 20px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
 }
 
 .vessel-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .vessel-item.active {
-    background-color: rgba(0, 176, 250, 0.15);
-    border-left: 4px solid #00B0FA;
+    background: #00B0FA;
+    /* Matches the vibrant blue in image */
+    border-left-color: white;
 }
 
 .vessel-status-dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background: #475569;
+    background: #64748b;
 }
 
 .vessel-status-dot.v-active {
-    background: #10B981;
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    background: #22c55e;
 }
 
-.vessel-item h4 {
+.vessel-info-block h4 {
+    margin: 0;
     color: white;
-    font-size: 14px;
-    margin: 0 0 4px 0;
+    font-size: 15px;
     font-weight: 600;
 }
 
-.vessel-item p {
-    color: #94A3B8;
+.vessel-info-block p {
+    margin: 2px 0 0;
+    color: #94a3b8;
     font-size: 12px;
-    margin: 0;
 }
 
-.vessel-item.active p {
-    color: #00B0FA;
+.vessel-item.active .vessel-info-block p {
+    color: rgba(255, 255, 255, 0.8);
 }
 
-.add-vessel-btn {
-    margin: 24px;
-    background-color: #00B0FA;
+.sidebar-footer {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.add-vessel-btn-large {
+    width: 100%;
+    background: #00B0FA;
     color: white;
     border: none;
-    border-radius: 12px;
-    padding: 16px;
+    padding: 14px;
+    border-radius: 8px;
     font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     cursor: pointer;
-    transition: all 0.2s;
     box-shadow: 0 4px 12px rgba(0, 176, 250, 0.3);
-}
-
-.add-vessel-btn:hover {
-    background-color: #008AC5;
-    transform: translateY(-1px);
 }
 
 /* Main Content Area */
 .vessels-main {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.content-tabs {
+    overflow-y: auto;
     background-color: white;
-    display: flex;
-    padding: 0 24px;
-    border-bottom: 1px solid #E2E8F0;
-    gap: 32px;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow-x: hidden;
+    scrollbar-width: none;
+    /* Hide for Firefox */
+    -ms-overflow-style: none;
+    /* Hide for Internet Explorer and Edge */
 }
 
-.tab-item {
-    padding: 18px 0;
-    font-size: 13px;
-    font-weight: 600;
-    color: #64748B;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: color 0.2s;
-}
-
-.tab-item:hover {
-    color: #1E293B;
-}
-
-.tab-item.active {
-    color: #00B0FA;
-}
-
-.tab-item.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background-color: #00B0FA;
-    border-radius: 3px 3px 0 0;
+.vessels-main::-webkit-scrollbar {
+    display: none;
+    /* Hide for Chrome, Safari and Opera */
 }
 
 /* Form Area */
 .form-scroll-area {
-    padding: 40px;
-    overflow-y: auto;
+    padding: 30px;
     flex: 1;
 }
 
 .vessel-form-card {
     background-color: white;
     border-radius: 20px;
-    padding: 48px;
+    padding: 30px;
     border: 1px solid #E2E8F0;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.03), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
 }
 
 .form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
 }
 
 .form-group {
@@ -284,34 +327,31 @@
 /* Modern Radios */
 .radio-group-modern {
     display: flex;
-    gap: 12px;
-    margin-top: 4px;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
 }
 
 .radio-item-modern {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #F8FAFC;
-    padding: 10px 16px;
-    border-radius: 10px;
-    border: 1px solid #E2E8F0;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     color: #475569;
 }
 
 .radio-item-modern:hover {
-    border-color: #00B0FA;
-    background: white;
+    color: #00B0FA;
 }
 
 .radio-item-modern input {
     accent-color: #00B0FA;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 /* Premium Form Actions */
@@ -327,35 +367,33 @@
 .action-btn-p {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 32px;
-    border-radius: 14px;
-    font-weight: 600;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     border: none;
-    font-size: 15px;
+    color: white;
 }
 
 .cancel-p {
-    background: #F1F5F9;
-    color: #64748B;
+    background: #94A3B8;
 }
 
 .cancel-p:hover {
-    background: #E2E8F0;
-    color: #1E293B;
+    background: #64748B;
+    transform: scale(1.05);
 }
 
 .submit-p {
     background: #00B0FA;
-    color: white;
     box-shadow: 0 4px 12px rgba(0, 176, 250, 0.3);
 }
 
 .submit-p:hover {
     background: #008AC5;
-    transform: translateY(-2px);
+    transform: scale(1.05);
     box-shadow: 0 6px 16px rgba(0, 176, 250, 0.4);
 }
 
