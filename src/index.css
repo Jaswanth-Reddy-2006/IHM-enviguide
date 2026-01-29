@@ -4,11 +4,11 @@
 
 /* CSS Variables - Ocean/Water Inspired */
 :root {
-  /* Primary Colors - Maritime Blue */
-  --primary-blue: #0891b2;
-  --primary-blue-light: #06b6d4;
-  --primary-blue-dark: #0e7490;
-  --primary-blue-subtle: #ecfeff;
+  /* Primary Colors - Maritime Blue (Updated to #00B0FA) */
+  --primary-blue: #00B0FA;
+  --primary-blue-light: #33C0FB;
+  --primary-blue-dark: #008AC5;
+  --primary-blue-subtle: #E0F7FF;
 
   /* Background Colors */
   --bg-white: #ffffff;

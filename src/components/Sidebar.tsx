@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard,
@@ -13,22 +14,54 @@ import {
     ChevronDown
 } from 'lucide-react';
 import './Sidebar.css';
-
 export default function Sidebar() {
     const location = useLocation();
+    const [expandedItem, setExpandedItem] = useState<string>('');
+    const [activeFocus, setActiveFocus] = useState<string | null>(null);
+
+    // Sync expanded state with route
+    useEffect(() => {
+        const currentPath = location.pathname;
+        const parentItem = menuItems.find(item =>
+            item.children && item.children.some(child => currentPath === child.path)
+        );
+        if (parentItem) {
+            setExpandedItem(parentItem.label);
+        }
+    }, [location.pathname]);
 
     const menuItems = [
-        { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-        { path: '/vessels', icon: Ship, label: 'Vessels' },
-        { path: '/decks', icon: Layers, label: 'Decks & Materials', hasSubmenu: true },
-        { path: '/materials', icon: FileText, label: 'Materials Record', hasSubmenu: true },
+        { path: '/dashboard', icon: LayoutDashboard, label: 'Admin Dashboard' },
+        {
+            path: '/vessels',
+            icon: Ship,
+            label: 'Vessels',
+            children: [
+                { path: '/vessels/ship', icon: Ship, label: 'Ship' },
+                { path: '/vessels/fleet', icon: Layers, label: 'Fleet' },
+                { path: '/vessels/sub-fleet', icon: Layers, label: 'Sub Fleet' },
+            ]
+        },
+        { path: '/decks', icon: Layers, label: 'Decks & Materials' },
+        { path: '/materials', icon: FileText, label: 'Materials Record' },
         { path: '/purchase-orders', icon: ShoppingCart, label: 'Purchase Orders' },
-        { path: '/administration', icon: Settings, label: 'Administration', hasSubmenu: true },
-        { path: '/inventory', icon: Upload, label: 'Inventory Onboarding', hasSubmenu: true },
-        { path: '/security', icon: Users, label: 'Security & Users', hasSubmenu: true },
-        { path: '/master-data', icon: Database, label: 'Master Data', hasSubmenu: true },
+        { path: '/administration', icon: Settings, label: 'Administration' },
+        { path: '/users', icon: Users, label: 'Users & Security' },
+        { path: '/master-data', icon: Database, label: 'Master Data' },
+        { path: '/inventory', icon: Upload, label: 'Inventory Onboarding' },
         { path: '/contact', icon: Mail, label: 'Contact Us' },
     ];
+
+    const toggleSubmenu = (label: string) => {
+        if (expandedItem === label) {
+            setExpandedItem('');
+            setActiveFocus(null);
+        } else {
+            setExpandedItem(label);
+            setActiveFocus(label);
+        }
+    };
+
 
     return (
         <aside className="sidebar">
@@ -39,22 +72,68 @@ export default function Sidebar() {
                     </div>
                     <div className="logo-text">
                         <h2>IHM Platform</h2>
+                        <p style={{ margin: 0, fontSize: '12px', color: 'var(--primary-blue)' }}>Maritime Safety</p>
                     </div>
                 </div>
             </div>
 
             <nav className="sidebar-nav">
-                {menuItems.map((item) => (
-                    <Link
-                        key={item.path}
-                        to={item.path}
-                        className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
-                    >
-                        <item.icon size={20} className="nav-icon" />
-                        <span className="nav-label">{item.label}</span>
-                        {item.hasSubmenu && <ChevronDown size={16} className="nav-chevron" />}
-                    </Link>
-                ))}
+                {menuItems.map((item) => {
+                    const isExpanded = expandedItem === item.label;
+                    const hasChildren = item.children && item.children.length > 0;
+
+                    // Check if we're on a child route of this parent
+                    const isOnChildRoute = hasChildren && item.children.some(child => location.pathname === child.path);
+
+                    // A regular page is "active" (blue) if it matches the path AND no category has the manual focus
+                    const isActive = !hasChildren && location.pathname === item.path && activeFocus === null;
+
+                    // A category is "blue" if it has the manual focus OR we are on one of its child routes
+                    const isCategoryBlue = hasChildren && (activeFocus === item.label || isOnChildRoute);
+
+                    return (
+                        <div key={item.path} className="nav-item-container">
+                            {hasChildren ? (
+                                <div
+                                    className={`nav-item ${isCategoryBlue ? 'active' : ''}`}
+                                    onClick={() => toggleSubmenu(item.label)}
+                                >
+                                    <item.icon size={20} className="nav-icon" />
+                                    <span className="nav-label">{item.label}</span>
+                                    <ChevronDown
+                                        size={16}
+                                        className={`nav-chevron ${isExpanded ? 'rotate' : ''}`}
+                                    />
+                                </div>
+                            ) : (
+                                <Link
+                                    to={item.path}
+                                    className={`nav-item ${isActive ? 'active' : ''}`}
+                                    onClick={() => setActiveFocus(null)}
+                                >
+                                    <item.icon size={20} className="nav-icon" />
+                                    <span className="nav-label">{item.label}</span>
+                                </Link>
+                            )}
+
+                            {hasChildren && isExpanded && (
+                                <div className="submenu">
+                                    {item.children.map((child) => (
+                                        <Link
+                                            key={child.path}
+                                            to={child.path}
+                                            className={`nav-item sub-item ${location.pathname === child.path || (child.label === 'Ship' && location.pathname === '/vessels') ? 'sub-active' : ''}`}
+                                            onClick={() => setActiveFocus(null)}
+                                        >
+                                            <child.icon size={18} className="nav-icon" />
+                                            <span className="nav-label">{child.label}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
             </nav>
         </aside>
     );
