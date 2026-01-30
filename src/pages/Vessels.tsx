@@ -3,7 +3,8 @@ import { useParams, useLocation } from 'react-router-dom';
 import {
     Search, Plus, Layers, FileText, ShoppingCart,
     BarChart2, FileCheck, Check, Edit2, X,
-    FolderOpen, Ship as ShipIcon
+    FolderOpen, Ship as ShipIcon, Pin, Upload, Eye, Trash2, Calendar, ChevronDown,
+    Download, AlertTriangle, ExternalLink, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
@@ -179,11 +180,100 @@ export default function Vessels() {
     const [isAdding, setIsAdding] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
+    const [vesselDocuments, setVesselDocuments] = useState<{ [key: string]: any[] }>({
+        'MV Ocean Pioneer': Array.from({ length: 28 }, (_, i) => ({
+            id: i + 1,
+            name: [
+                'International Air Pollution Prevention Cert',
+                'Main Engine Maintenance Manual',
+                'Upper Deck GA Plan Revision B',
+                'Hazardous Materials Declaration - Deck A',
+                'Safety Equipment Inventory',
+                'Load Line Certificate',
+                'Crew List Declaration',
+                'Waste Management Plan'
+            ][i % 8] + (i > 7 ? ` - Part ${Math.floor(i / 8) + 1}` : ''),
+            type: ['Certificate', 'Manual', 'Drawing', 'Declaration', 'Certificate', 'Certificate', 'Declaration', 'Manual'][i % 8],
+            uploadedBy: i % 2 === 0 ? 'John Admin' : 'M. Smith',
+            date: 'Oct 12, 2023',
+            status: i % 5 === 0 ? 'Expiring' : 'Active',
+            initials: i % 2 === 0 ? 'JA' : 'MS'
+        })),
+        'ACOSTA': Array.from({ length: 15 }, (_, i) => ({
+            id: i + 1,
+            name: [
+                'Registry Certificate Panama',
+                'Cargo Handling Manual',
+                'Ballast Water Management Plan',
+                'Fire Safety Certificate',
+                'Ship Security Plan',
+                'Navigation Equipment Certificate',
+                'Radio License Certificate',
+                'Tonnage Certificate'
+            ][i % 8] + (i > 7 ? ` - Rev ${Math.floor(i / 8) + 1}` : ''),
+            type: ['Certificate', 'Manual', 'Manual', 'Certificate', 'Manual', 'Certificate', 'Certificate', 'Certificate'][i % 8],
+            uploadedBy: i % 3 === 0 ? 'Admin' : i % 3 === 1 ? 'J. Smith' : 'M. Brown',
+            date: ['Jan 10, 2024', 'Feb 15, 2024', 'Mar 20, 2024'][i % 3],
+            status: i % 6 === 0 ? 'Expiring' : 'Active',
+            initials: i % 3 === 0 ? 'AD' : i % 3 === 1 ? 'JS' : 'MB'
+        })),
+        'AFIF': Array.from({ length: 10 }, (_, i) => ({
+            id: i + 1,
+            name: [
+                'International Oil Pollution Prevention Certificate',
+                'Minimum Safe Manning Document',
+                'Stability Information Booklet',
+                'Cargo Securing Manual',
+                'Oil Record Book',
+                'Garbage Management Plan',
+                'ISPS Security Certificate',
+                'Class Certificate'
+            ][i % 8] + (i > 7 ? ` - Part ${i - 7}` : ''),
+            type: ['Certificate', 'Certificate', 'Manual', 'Manual', 'Manual', 'Manual', 'Certificate', 'Certificate'][i % 8],
+            uploadedBy: i % 2 === 0 ? 'K. Wilson' : 'R. Davis',
+            date: ['Nov 05, 2023', 'Dec 12, 2023'][i % 2],
+            status: i % 4 === 0 ? 'Expiring' : 'Active',
+            initials: i % 2 === 0 ? 'KW' : 'RD'
+        })),
+        'PACIFIC HORIZON': Array.from({ length: 12 }, (_, i) => ({
+            id: i + 1,
+            name: [
+                'Continuous Synopsis Record',
+                'Fuel Oil Quality Certificate',
+                'Bunker Delivery Notes',
+                'Voyage Data Recorder Certificate',
+                'Emergency Response Procedures',
+                'Maintenance Schedule',
+                'Inspection Reports',
+                'Training Records'
+            ][i % 8] + (i > 7 ? ` - ${2024 - Math.floor(i / 8)}` : ''),
+            type: ['Certificate', 'Certificate', 'Declaration', 'Certificate', 'Manual', 'Manual', 'Drawing', 'Manual'][i % 8],
+            uploadedBy: i % 3 === 0 ? 'S. Anderson' : i % 3 === 1 ? 'T. Martinez' : 'L. Taylor',
+            date: ['Aug 22, 2023', 'Sep 18, 2023', 'Oct 30, 2023'][i % 3],
+            status: i % 5 === 0 ? 'Expiring' : 'Active',
+            initials: i % 3 === 0 ? 'SA' : i % 3 === 1 ? 'TM' : 'LT'
+        }))
+    });
+
+    const [docSearch, setDocSearch] = useState('');
+    const [docCategory, setDocCategory] = useState('All');
+    const [docStatus, setDocStatus] = useState('All');
+
     const [formData, setFormData] = useState<VesselData>(INITIAL_VESSELS[0]);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [isDraggingFile, setIsDraggingFile] = useState(false);
+
+    const [selectedDoc, setSelectedDoc] = useState<any>(null);
+    const [docToDelete, setDocToDelete] = useState<any>(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [newDocType, setNewDocType] = useState('Select Document Type');
+    const [docPage, setDocPage] = useState(1);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const docsPerPage = 7;
+
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const docInputRef = useRef<HTMLInputElement>(null);
 
     const filteredVessels = useMemo(() => {
         return vesselList.filter(v =>
@@ -191,6 +281,12 @@ export default function Vessels() {
             v.imoNo.includes(searchTerm)
         );
     }, [vesselList, searchTerm]);
+
+
+
+    const activeVesselData = useMemo(() => {
+        return vesselList.find(v => v.name === activeVesselName);
+    }, [vesselList, activeVesselName]);
 
     const handleVesselSelect = (vessel: VesselData) => {
         setActiveVesselName(vessel.name);
@@ -272,6 +368,72 @@ export default function Vessels() {
         setShowModal(true);
     };
 
+    // Documents Logic
+    const handleDeleteDocClick = (doc: any) => {
+        setDocToDelete(doc);
+        setShowDeleteConfirm(true);
+    };
+
+    const confirmDeleteDoc = () => {
+        if (docToDelete) {
+            setVesselDocuments(prev => ({
+                ...prev,
+                [activeVesselName]: prev[activeVesselName].filter(d => d.id !== docToDelete.id)
+            }));
+            setShowDeleteConfirm(false);
+            setDocToDelete(null);
+            setModalMessage('Document deleted successfully!');
+            setShowModal(true);
+        }
+    };
+
+    const handleDocUpload = () => {
+        if (!selectedFile) {
+            docInputRef.current?.click();
+            return;
+        }
+
+        if (newDocType === 'Select Document Type') {
+            alert('Please select a document type first');
+            return;
+        }
+
+        const newDoc = {
+            id: Date.now(),
+            name: selectedFile.name,
+            type: newDocType,
+            uploadedBy: 'John Admin',
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+            status: 'Active',
+            initials: 'JA'
+        };
+
+        setVesselDocuments(prev => ({
+            ...prev,
+            [activeVesselName]: [newDoc, ...prev[activeVesselName]]
+        }));
+
+        setModalMessage(`'${selectedFile.name}' uploaded successfully!`);
+        setShowModal(true);
+        setSelectedFile(null); // Reset selection
+        if (docInputRef.current) docInputRef.current.value = ''; // Reset input
+    };
+
+    const handleDocFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+
+    const handleDocDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+
     const tabs = [
         { id: 'project', label: 'PROJECT', icon: FileCheck },
         { id: 'decks', label: 'Decks', icon: Layers },
@@ -294,6 +456,269 @@ export default function Vessels() {
                             Go Back to Ship
                         </button>
                     </div>
+                </div>
+            );
+        }
+
+        if (activeTab === 'documents') {
+            const currentDocs = vesselDocuments[activeVesselName] || [];
+            const filteredDocs = currentDocs.filter(doc =>
+                doc.name.toLowerCase().includes(docSearch.toLowerCase()) &&
+                (docCategory === 'All' || doc.type === docCategory) &&
+                (docStatus === 'All' || doc.status === docStatus)
+            );
+
+            const paginatedDocs = filteredDocs.slice((docPage - 1) * docsPerPage, docPage * docsPerPage);
+
+            return (
+                <div className="documents-container">
+                    <div className="doc-upload-banner">
+                        <div className="upload-brand">
+                            <Upload size={20} color="#00B0FA" />
+                            <span className="upload-label">Upload Document</span>
+                        </div>
+                        <div className="upload-slot">
+                            <div
+                                className={`upload-dropzone ${selectedFile ? 'file-selected' : ''}`}
+                                onDragOver={(e) => e.preventDefault()}
+                                onDrop={handleDocDrop}
+                                onClick={() => docInputRef.current?.click()}
+                            >
+                                {selectedFile ? (
+                                    <div className="selected-file-display">
+                                        <FileText size={18} color="#00B0FA" />
+                                        <span>{selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                                    </div>
+                                ) : (
+                                    <span>Choose file or drag and drop...</span>
+                                )}
+                            </div>
+                            <input
+                                type="file"
+                                ref={docInputRef}
+                                style={{ display: 'none' }}
+                                onChange={handleDocFileChange}
+                            />
+                            <select
+                                className="doc-type-select"
+                                value={newDocType}
+                                onChange={(e) => setNewDocType(e.target.value)}
+                            >
+                                <option>Select Document Type</option>
+                                <option>Certificate</option>
+                                <option>Manual</option>
+                                <option>Drawing</option>
+                                <option>Declaration</option>
+                            </select>
+                            <button className="upload-exec-btn" onClick={handleDocUpload}>
+                                <Upload size={18} /> {selectedFile ? 'Upload Now' : 'Select File'}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="doc-filters-bar">
+                        <div className="doc-search-input">
+                            <Search size={18} />
+                            <input
+                                type="text"
+                                placeholder="Search by filename..."
+                                value={docSearch}
+                                onChange={(e) => setDocSearch(e.target.value)}
+                            />
+                        </div>
+                        <select value={docCategory} onChange={(e) => setDocCategory(e.target.value)} className="doc-filter-select">
+                            <option value="All">Category</option>
+                            <option value="Certificate">Certificate</option>
+                            <option value="Manual">Manual</option>
+                            <option value="Drawing">Drawing</option>
+                            <option value="Declaration">Declaration</option>
+                        </select>
+                        <select value={docStatus} onChange={(e) => setDocStatus(e.target.value)} className="doc-filter-select">
+                            <option value="All">Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Expiring">Expiring</option>
+                        </select>
+                        <div className="doc-date-range">
+                            <Calendar size={18} />
+                            <span>Select Date Range (From - To)</span>
+                            <ChevronDown size={14} />
+                        </div>
+                        <button className="clear-filters-link" onClick={() => { setDocSearch(''); setDocCategory('All'); setDocStatus('All'); }}>Clear Filters</button>
+                    </div>
+
+                    <div className="doc-table-wrapper">
+                        <table className="doc-table">
+                            <thead>
+                                <tr>
+                                    <th>DOCUMENT NAME</th>
+                                    <th>TYPE</th>
+                                    <th>UPLOADED BY</th>
+                                    <th>DATE</th>
+                                    <th>STATUS</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {paginatedDocs.map(doc => (
+                                    <tr key={doc.id}>
+                                        <td>
+                                            <div className="doc-name-cell">
+                                                <div className={`doc-type-icon ${doc.type.toLowerCase()}`}>
+                                                    {doc.type === 'Certificate' && <FileText size={18} color="#EF4444" />}
+                                                    {doc.type === 'Manual' && <FileText size={18} color="#3B82F6" />}
+                                                    {doc.type === 'Drawing' && <Pin size={18} color="#00B0FA" />}
+                                                    {doc.type === 'Declaration' && <FileText size={18} color="#94A3B8" />}
+                                                </div>
+                                                <span className="doc-name-txt">{doc.name}</span>
+                                            </div>
+                                        </td>
+                                        <td><span className="doc-type-tag">{doc.type}</span></td>
+                                        <td>
+                                            <div className="doc-uploader">
+                                                <div className="uploader-avatar">{doc.initials}</div>
+                                                <span>{doc.uploadedBy}</span>
+                                            </div>
+                                        </td>
+                                        <td><span className="doc-date-txt">{doc.date}</span></td>
+                                        <td><span className={`status-pill ${doc.status.toLowerCase()}`}>{doc.status}</span></td>
+                                        <td>
+                                            <div className="doc-actions">
+                                                <button className="action-icn-btn" onClick={() => setSelectedDoc(doc)}><Eye size={16} /></button>
+                                                <button className="action-icn-btn" onClick={() => handleDeleteDocClick(doc)}><Trash2 size={16} /></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <div className="doc-pagination-bar">
+                            <span className="showing-text">SHOWING {paginatedDocs.length} OF {filteredDocs.length} DOCUMENTS</span>
+                            <div className="pagination-arrows">
+                                <button className="arrow-btn" onClick={() => setDocPage(p => Math.max(1, p - 1))} disabled={docPage === 1 || filteredDocs.length === 0}>
+                                    <ChevronLeft size={16} />
+                                </button>
+                                <button className="arrow-btn" onClick={() => setDocPage(p => Math.min(Math.ceil(filteredDocs.length / docsPerPage), p + 1))} disabled={docPage === Math.ceil(filteredDocs.length / docsPerPage) || filteredDocs.length === 0}>
+                                    <ChevronRight size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Quick Preview Panel */}
+                    {selectedDoc && (
+                        <div className="preview-overlay">
+                            <div className="preview-backdrop" onClick={() => setSelectedDoc(null)} />
+                            <div className="preview-panel">
+                                <div className="preview-header">
+                                    <div className="preview-header-left">
+                                        <Eye size={20} color="#00B0FA" />
+                                        <h3>QUICK PREVIEW</h3>
+                                    </div>
+                                    <div className="preview-header-actions">
+                                        <button className="preview-action-btn primary">
+                                            <ExternalLink size={18} /> OPEN IN FULL VIEWER
+                                        </button>
+                                        <button className="preview-icon-btn"><Download size={18} /></button>
+                                        <button className="preview-icon-btn" onClick={() => setSelectedDoc(null)}><X size={20} /></button>
+                                    </div>
+                                </div>
+                                <div className="preview-content">
+                                    <div className="preview-document-card fit-content">
+                                        <div className="doc-header-visual">
+                                            <div className={`doc-visual-icon ${selectedDoc.type.toLowerCase()}`}>
+                                                <FileText size={40} />
+                                            </div>
+                                            <div className="doc-badge-type">{selectedDoc.type.toUpperCase()} <span className="format-p">PDF</span></div>
+                                            <div className="doc-id-ref">IAPP-2023-98765-P</div>
+                                        </div>
+
+                                        <h2 className="preview-doc-title">{selectedDoc.name.toUpperCase()}</h2>
+
+                                        <div className="preview-metadata-grid">
+                                            <div className="meta-item">
+                                                <label>VESSEL NAME</label>
+                                                <span>{activeVesselName}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <label>DISTINCTIVE NUMBER</label>
+                                                <span>IMO {activeVesselData?.imoNo || 'N/A'}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <label>PORT OF REGISTRY</label>
+                                                <span>{activeVesselData?.portOfRegistry || 'N/A'}</span>
+                                            </div>
+                                            <div className="meta-item">
+                                                <label>GROSS TONNAGE</label>
+                                                <span>{activeVesselData?.grossTonnage || 'N/A'}</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="doc-visual-placeholder">
+                                            <div className="verified-seal">
+                                                <Check size={24} />
+                                                <span>AUTHORIZED SIGNATURE</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="preview-zoom-controls" style={{ display: 'none' }}>
+                                            {/* Zoom controls removed for Quick Preview as requested */}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="preview-footer">
+                                    <div className="footer-meta-col">
+                                        <label>SIGNED BY</label>
+                                        <div className="meta-val">
+                                            <div className="avatar">CA</div>
+                                            <span>Capt. Anders</span>
+                                        </div>
+                                    </div>
+                                    <div className="footer-meta-col">
+                                        <label>EXPIRY DATE</label>
+                                        <div className="meta-val">
+                                            <Calendar size={16} color="#F59E0B" />
+                                            <span>Oct 24, 2028</span>
+                                        </div>
+                                    </div>
+                                    <div className="footer-meta-col">
+                                        <label>LAST MODIFIED</label>
+                                        <div className="meta-val">
+                                            <AlertTriangle size={16} color="#64748B" />
+                                            <span>2 days ago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="preview-disclaimer">
+                                    <AlertTriangle size={14} />
+                                    <span>This is a secure preview. For technical editing, please use the Full Viewer.</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Delete Confirmation Modal */}
+                    {showDeleteConfirm && (
+                        <div className="modal-overlay">
+                            <div className="modal-content success-card-modal delete">
+                                <div className="modal-success-icon delete">
+                                    <Trash2 size={40} />
+                                </div>
+                                <h2 className="modal-title">Confirm Delete</h2>
+                                <p className="modal-message">
+                                    Are you sure you want to delete '<strong>{docToDelete?.name}</strong>'?
+                                    This action cannot be undone.
+                                </p>
+                                <div className="modal-actions-group">
+                                    <button className="modal-action-btn cancel" onClick={() => setShowDeleteConfirm(false)}>
+                                        CANCEL
+                                    </button>
+                                    <button className="modal-action-btn delete" onClick={confirmDeleteDoc}>
+                                        DELETE
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -424,14 +849,18 @@ export default function Vessels() {
 
                         <div className="form-actions-circular">
                             {isAdding ? (
-                                <>
-                                    <button type="button" className="action-btn-circle cancel-circle" onClick={() => handleVesselSelect(vesselList[0])}>
-                                        <X size={24} />
+                                <div className="edit-actions-group">
+                                    <button
+                                        type="button"
+                                        className="action-btn-text cancel-btn"
+                                        onClick={() => handleVesselSelect(vesselList[0])}
+                                    >
+                                        CANCEL
                                     </button>
-                                    <button type="submit" className="action-btn-circle submit-circle">
-                                        <Check size={24} />
+                                    <button type="submit" className="action-btn-text save-btn">
+                                        SAVE
                                     </button>
-                                </>
+                                </div>
                             ) : (
                                 <>
                                     {!isEditing ? (
@@ -499,8 +928,8 @@ export default function Vessels() {
                     </div>
 
                     <div className="vessels-content-layout">
-                        {/* Secondary Sidebar - Hidden on Decks tab */}
-                        {activeTab !== 'decks' && (
+                        {/* Secondary Sidebar - Hidden on Decks & Documents tabs */}
+                        {activeTab !== 'decks' && activeTab !== 'documents' && (
                             <aside className="secondary-sidebar">
                                 <div className="vessel-search-container">
                                     <div className="vessel-search-box">

@@ -1,4 +1,4 @@
-import { Vessel, DashboardStats, SOCAlert, PurchaseOrder } from '../types';
+import type { Vessel, DashboardStats, SOCAlert, PurchaseOrder } from '../types/index';
 
 // Mock Vessels Data
 export const mockVessels: Vessel[] = [

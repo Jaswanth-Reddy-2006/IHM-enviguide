@@ -13,6 +13,7 @@
 
     /* Sidebar Config (matching index.css var or override) */
     --sidebar-width: 280px;
+    --header-height: 72px;
 }
 
 body {
@@ -55,6 +56,10 @@ body {
 .main-content {
     margin-left: 280px;
     width: calc(100% - 280px);
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--header-height);
+    /* Account for fixed header height */
 }
 
 .dashboard-content {

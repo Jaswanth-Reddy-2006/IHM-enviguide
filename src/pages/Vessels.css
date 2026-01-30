@@ -1,3 +1,9 @@
+@import url('./DocTab.css');
+
+:root {
+    --header-height: 72px;
+}
+
 .vessels-wrapper {
     display: flex;
     flex-direction: column;
@@ -14,9 +20,13 @@
 }
 
 .vessel-page-main {
-    padding: 0 !important;
-    overflow: hidden !important;
+    padding: var(--header-height) 0 0 0 !important;
     height: 100vh;
+    margin-left: 280px;
+    width: calc(100% - 280px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .vessel-page-main .dashboard-header {
@@ -1210,8 +1220,8 @@
 .success-card-modal {
     background: white;
     width: 100%;
-    max-width: 400px;
-    padding: 40px;
+    max-width: 320px;
+    padding: 30px;
     border-radius: 24px;
     text-align: center;
     display: flex;
@@ -1222,8 +1232,8 @@
 }
 
 .modal-success-icon {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background: #22c55e;
     color: white;
     border-radius: 50%;
@@ -1235,10 +1245,10 @@
 }
 
 .modal-title {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 800;
     color: #0f172a;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .modal-message {
@@ -1394,4 +1404,154 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Pagination Styles */
+.doc-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid #F1F5F9;
+    background: #FFF;
+    border-radius: 0 0 12px 12px;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #64748B;
+}
+
+.pagination-btns {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-btn {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1E293B;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-num {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-num:hover:not(.active) {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+    color: #1E293B;
+}
+
+.page-num.active {
+    background: #00B0FA;
+    border-color: #00B0FA;
+    color: white;
+    font-weight: 600;
+}
+
+.doc-pagination-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    border-top: 1px solid #E2E8F0;
+    background: #FAFBFC;
+    border-radius: 0 0 16px 16px;
+    width: 100%;
+    min-height: 72px;
+}
+
+.showing-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 8px 0;
+}
+
+.pagination-arrows {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.arrow-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1.5px solid #D1D5DB;
+    border-radius: 6px;
+    color: #64748B;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.arrow-btn:hover:not(:disabled) {
+    background: #00B0FA;
+    border-color: #00B0FA;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 176, 250, 0.25);
+}
+
+.arrow-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 176, 250, 0.2);
+}
+
+.arrow-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    background: #F1F5F9;
+    border-color: #E2E8F0;
+    color: #94A3B8;
+    box-shadow: none;
+
+}
+.selected-file-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.upload-dropzone.file-selected {
+    background: #F0F9FF;
+    border-color: #00B0FA;
 }
