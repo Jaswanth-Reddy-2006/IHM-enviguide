@@ -30,7 +30,7 @@
     gap: 6px;
     background: #f1f5f9;
     padding: 4px 10px;
-    border-radius: 6px;
+    border-radius: var(--radius-premium);
     font-size: 11px;
     color: #64748b;
     font-weight: 600;
@@ -44,7 +44,7 @@
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     font-weight: 700;
     font-size: 13px;
     cursor: pointer;
@@ -85,7 +85,7 @@
 /* Supplier Card & Header Refinement */
 .supplier-card {
     background: white;
-    border-radius: 14px;
+    border-radius: var(--radius-premium);
     border: 1px solid #e2e8f0;
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -255,7 +255,7 @@
     transform: translateY(-50%);
     background: white;
     border: 1px solid #E2E8F0;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     padding: 8px;
     display: flex;
     flex-direction: column;
@@ -278,7 +278,7 @@
     font-weight: 600;
     color: #475569;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     transition: all 0.2s;
 }
 
@@ -306,7 +306,7 @@
 .status-pill-md {
     display: inline-block;
     padding: 4px 10px;
-    border-radius: 6px;
+    border-radius: var(--radius-premium);
     font-size: 10px;
     font-weight: 800;
 }
@@ -364,7 +364,7 @@
 .po-summary-premium {
     background: #f0fdf9;
     border: 1px solid #ccfbf1;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     padding: 16px 20px;
     margin-top: auto;
     display: flex;
@@ -444,7 +444,7 @@
 .empty-po-card {
     background: white;
     padding: 60px 48px;
-    border-radius: 24px;
+    border-radius: var(--radius-premium);
     text-align: center;
     width: 100%;
     max-width: 500px;
@@ -482,7 +482,7 @@
     color: white;
     border: none;
     padding: 12px 32px;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     font-weight: 700;
     font-size: 15px;
     display: inline-flex;
@@ -525,7 +525,7 @@
     background: #0f172a;
     color: white;
     padding: 12px 24px;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     animation: slideDownToast 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     min-width: 400px;
@@ -674,7 +674,7 @@
 .form-section-expandable {
     background: white;
     border: 1px solid #E2E8F0;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     margin-bottom: 12px;
     overflow: hidden;
 }
@@ -742,7 +742,7 @@
 .form-field textarea {
     background: white;
     border: 1px solid #E2E8F0;
-    border-radius: 6px;
+    border-radius: var(--radius-premium);
     padding: 10px 14px;
     font-size: 13px;
     color: #1E293B;
@@ -758,7 +758,7 @@
     gap: 12px;
     padding: 14px 20px;
     border: 1.5px dashed #CBD5E1;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     background: #F8FAFC;
     cursor: pointer;
     transition: all 0.2s;
@@ -836,7 +836,7 @@
     gap: 10px;
     padding: 12px 14px;
     border: 1.5px solid #E2E8F0;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     background: white;
 }
 
@@ -947,7 +947,7 @@
     background: #05192D;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
@@ -962,7 +962,7 @@
     background: #EF4444;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     cursor: pointer;
 }
 
@@ -989,7 +989,7 @@
     border: 1px solid #CBD5E1;
     color: #475569;
     padding: 10px 16px;
-    border-radius: 8px;
+    border-radius: var(--radius-premium);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -1028,7 +1028,7 @@
     gap: 16px;
     background: white;
     padding: 20px 24px;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     border: 1px solid #E2E8F0;
     margin-bottom: 24px;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -1064,7 +1064,7 @@
 .filter-select {
     padding: 8px 12px;
     border: 1px solid #CBD5E1;
-    border-radius: 6px;
+    border-radius: var(--radius-premium);
     font-size: 13px;
     color: #1E293B;
     background: white;
@@ -1082,7 +1082,7 @@
     padding: 8px 16px;
     background: #F1F5F9;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-premium);
     color: #64748B;
     font-size: 13px;
     font-weight: 600;

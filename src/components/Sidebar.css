@@ -1,4 +1,8 @@
-/* Sidebar Styles - Light Theme */
+/* Global Scrollbar Refinement - Remove native buttons (triangles) */
+*::-webkit-scrollbar-button {
+    display: none !important;
+}
+
 .sidebar {
     width: 280px;
     height: 100vh;
@@ -10,7 +14,6 @@
     left: 0;
     top: 0;
     z-index: 1350;
-    /* Higher than header to ensure logo is visible */
     border-right: 1px solid var(--border-color);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
@@ -52,13 +55,36 @@
 .sidebar.collapsed:not(:hover) .logo-text,
 .sidebar.collapsed:not(:hover) .nav-label,
 .sidebar.collapsed:not(:hover) .nav-chevron {
-    display: none;
     opacity: 0;
+    visibility: hidden;
+    max-width: 0;
+    transform: translateX(-15px);
+    pointer-events: none;
+    margin: 0;
+    padding: 0;
+}
+
+.logo-text,
+.nav-label,
+.nav-chevron {
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s, max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .sidebar.collapsed:not(:hover) .nav-item {
     justify-content: center;
     padding: 12px;
+    gap: 0;
+}
+
+.sidebar.collapsed:not(:hover) .sidebar-logo {
+    justify-content: center;
+    gap: 0;
 }
 
 .sidebar.collapsed:not(:hover) .submenu {
@@ -93,11 +119,31 @@
     width: 40px;
     height: 40px;
     background: var(--primary-blue);
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+}
+
+.logo-icon svg {
+    animation: sailing 3s ease-in-out infinite;
+}
+
+@keyframes sailing {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-2px) rotate(-5deg);
+    }
+
+    75% {
+        transform: translateY(1px) rotate(5deg);
+    }
 }
 
 .logo-text h2 {
@@ -127,7 +173,7 @@
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 14px;
@@ -139,8 +185,8 @@
 }
 
 .nav-item:hover {
-    background: var(--bg-gray-50);
-    color: var(--text-primary);
+    background: var(--primary-blue-subtle) !important;
+    color: var(--primary-blue) !important;
 }
 
 /* Active State (Top Level) */
@@ -208,8 +254,8 @@
 }
 
 .nav-item.sub-item:hover {
-    background: var(--bg-gray-50);
-    color: var(--text-primary);
+    background: var(--primary-blue-subtle) !important;
+    color: var(--primary-blue) !important;
 }
 
 .nav-item.sub-item.sub-active:hover {
@@ -222,12 +268,16 @@
     width: 6px;
 }
 
+.sidebar::-webkit-scrollbar-button {
+    display: none !important;
+}
+
 .sidebar::-webkit-scrollbar-track {
     background: transparent;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-    background: var(--bg-gray-200);
+    background: var(--primary-blue) !important;
     border-radius: 3px;
 }
 

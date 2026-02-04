@@ -15,6 +15,29 @@ import {
     ChevronLeft
 } from 'lucide-react';
 import './Sidebar.css';
+
+const menuItems = [
+    { path: '/dashboard', icon: LayoutDashboard, label: 'Admin Dashboard' },
+    {
+        path: '/vessels',
+        icon: Ship,
+        label: 'Vessels',
+        children: [
+            { path: '/vessels/ship', icon: Ship, label: 'Ship' },
+            { path: '/vessels/fleet', icon: Layers, label: 'Fleet' },
+            { path: '/vessels/sub-fleet', icon: Layers, label: 'Sub Fleet' },
+        ]
+    },
+    { path: '/decks', icon: Layers, label: 'Decks & Materials' },
+    { path: '/materials', icon: FileText, label: 'Materials Record' },
+    { path: '/purchase-orders', icon: ShoppingCart, label: 'Purchase Orders' },
+    { path: '/administration', icon: Settings, label: 'Administration' },
+    { path: '/users', icon: Users, label: 'Users & Security' },
+    { path: '/master-data', icon: Database, label: 'Master Data' },
+    { path: '/inventory', icon: Upload, label: 'Inventory Onboarding' },
+    { path: '/contact', icon: Mail, label: 'Contact Us' },
+];
+
 export default function Sidebar() {
     const location = useLocation();
     const [expandedItem, setExpandedItem] = useState<string>('');
@@ -32,28 +55,6 @@ export default function Sidebar() {
             setExpandedItem(parentItem.label);
         }
     }, [location.pathname]);
-
-    const menuItems = [
-        { path: '/dashboard', icon: LayoutDashboard, label: 'Admin Dashboard' },
-        {
-            path: '/vessels',
-            icon: Ship,
-            label: 'Vessels',
-            children: [
-                { path: '/vessels/ship', icon: Ship, label: 'Ship' },
-                { path: '/vessels/fleet', icon: Layers, label: 'Fleet' },
-                { path: '/vessels/sub-fleet', icon: Layers, label: 'Sub Fleet' },
-            ]
-        },
-        { path: '/decks', icon: Layers, label: 'Decks & Materials' },
-        { path: '/materials', icon: FileText, label: 'Materials Record' },
-        { path: '/purchase-orders', icon: ShoppingCart, label: 'Purchase Orders' },
-        { path: '/administration', icon: Settings, label: 'Administration' },
-        { path: '/users', icon: Users, label: 'Users & Security' },
-        { path: '/master-data', icon: Database, label: 'Master Data' },
-        { path: '/inventory', icon: Upload, label: 'Inventory Onboarding' },
-        { path: '/contact', icon: Mail, label: 'Contact Us' },
-    ];
 
     const toggleSubmenu = (label: string) => {
         if (isCollapsed) {

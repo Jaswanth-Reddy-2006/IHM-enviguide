@@ -84,7 +84,7 @@
     width: 36px;
     height: 36px;
     background: #00B0FA;
-    border-radius: 10px;
+    border-radius: var(--radius-premium);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -158,7 +158,7 @@
     bottom: 30px;
     left: 30px;
     background: #334155;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     padding: 8px 16px;
     display: flex;
     align-items: center;
@@ -235,7 +235,7 @@
     bottom: 30px;
     right: 30px;
     background: #334155;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     padding: 8px 16px;
     display: flex;
     align-items: center;
@@ -265,7 +265,7 @@
     right: 30px;
     background: #475569;
     color: white;
-    border-radius: 10px;
+    border-radius: var(--radius-premium);
     padding: 16px;
     width: 220px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
@@ -407,7 +407,7 @@
 /* GA Section Card Refinement */
 .ga-section-card {
     background: #5A6679;
-    border-radius: 12px;
+    border-radius: var(--radius-premium);
     padding: 16px;
     color: white;
     cursor: pointer;

@@ -638,7 +638,7 @@ export default function MaterialsRecord({ vesselName }: MaterialsRecordProps) {
                                                 <FileText size={18} color="#ef4444" />
                                                 <span className="doc-name">Lab-Report-092.pdf</span>
                                             </div>
-                                            <a href="#" className="doc-external-link"><ExternalLink size={16} /></a>
+                                            <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" rel="noopener noreferrer" className="doc-external-link"><ExternalLink size={16} /></a>
                                         </div>
                                     </div>
 

@@ -12,6 +12,7 @@ import './Vessels.css';
 import MaterialsRecord from './MaterialsRecord';
 import PurchaseOrderView from './PurchaseOrderView';
 import DecksView from './DecksView';
+import vesselDefault from '../assets/images/vessel_default.jpg';
 
 interface VesselData {
     name: string;
@@ -71,7 +72,7 @@ const INITIAL_VESSELS: VesselData[] = [
         buildersUniqueId: 'BUILD-P1',
         mdStandard: 'IMO',
         socReference: 'SOC-998',
-        image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800'
+        image: vesselDefault
     },
     {
         name: 'ACOSTA',
@@ -100,7 +101,7 @@ const INITIAL_VESSELS: VesselData[] = [
         buildersUniqueId: 'BUILD-99',
         mdStandard: 'IMO',
         socReference: 'IHM-00670',
-        image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800'
+        image: vesselDefault
     },
     {
         name: 'AFIF',
@@ -129,7 +130,7 @@ const INITIAL_VESSELS: VesselData[] = [
         buildersUniqueId: 'BUILD-45',
         mdStandard: 'IHM Method',
         socReference: 'IHM-9988',
-        image: 'https://images.unsplash.com/photo-1494412574743-01947f15b6b7?auto=format&fit=crop&q=80&w=800'
+        image: vesselDefault
     },
     {
         name: 'PACIFIC HORIZON',
@@ -158,7 +159,7 @@ const INITIAL_VESSELS: VesselData[] = [
         buildersUniqueId: 'BUILD-P5',
         mdStandard: 'Nil',
         socReference: 'SOC-556',
-        image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800'
+        image: vesselDefault
     },
     {
         name: 'MV NORTH STAR',
@@ -187,7 +188,7 @@ const INITIAL_VESSELS: VesselData[] = [
         buildersUniqueId: 'B-STAR-1',
         mdStandard: 'IHM v2',
         socReference: 'SOC-NS-01',
-        image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800'
+        image: vesselDefault
     },
 ];
 
@@ -199,7 +200,7 @@ const EMPTY_FORM: VesselData = {
     nameOfYard: '', keelLaidDate: '', grossTonnage: '', teuUnits: '',
     ihmReference: '', signalLetters: '', buildersUniqueId: '',
     mdStandard: '', socReference: '',
-    image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800'
+    image: ''
 };
 
 export default function Vessels() {
@@ -376,8 +377,8 @@ export default function Vessels() {
                 setFormData(prev => ({ ...prev, image: reader.result as string }));
             };
             reader.readAsDataURL(file);
-            setModalMessage(`${file.name} uploaded successfully!`);
-            setShowModal(true);
+            // Clear input value so same file can be selected again if needed
+            e.target.value = '';
         }
     };
 
@@ -407,8 +408,6 @@ export default function Vessels() {
                 setFormData(prev => ({ ...prev, image: reader.result as string }));
             };
             reader.readAsDataURL(file);
-            setModalMessage(`${file.name} uploaded successfully!`);
-            setShowModal(true);
         }
     };
 
@@ -675,10 +674,22 @@ export default function Vessels() {
                                         <h3>QUICK PREVIEW</h3>
                                     </div>
                                     <div className="preview-header-actions">
-                                        <button className="preview-action-btn primary">
+                                        <button className="preview-action-btn primary" onClick={() => window.open('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', '_blank')}>
                                             <ExternalLink size={18} /> OPEN IN FULL VIEWER
                                         </button>
-                                        <button className="preview-icon-btn"><Download size={18} /></button>
+                                        <button
+                                            className="preview-icon-btn"
+                                            onClick={() => {
+                                                const link = document.createElement('a');
+                                                link.href = 'data:application/pdf;base64,JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwogIC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmogCjw8CiAgL1R5cGUgL1BhZ2VzCiAgL01lZGlhQm94IFsgMCAwIDU5NSA4NDIgXQogIC9Db3VudCAxCiAgL0tpZHMgWyAzIDAgUiBdCj4+CmVuZG9iagoKMyAwIG9iago8PAogIC9UeXBlIC9QYWdlCiAgL1BhcmVudCAyIDAgUgo+PgplbmRvYmoKCnhyZWYKMCA0CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxMCAwMDAwMCBuIAowMDAwMDAwMDYwIDAwMDAwIG4gCjAwMDAwMDAxNTcgMDAwMDAgbiAKdHJhaWxlcgo8PAogIC9TaXplIDQKICAvUm9vdCAxIDAgUgo+PgpzdGFydHhyZWYKMjEwCiUlRU9GCg=='; // Blank PDF
+                                                link.download = `${selectedDoc?.name || 'document'}.pdf`;
+                                                document.body.appendChild(link);
+                                                link.click();
+                                                document.body.removeChild(link);
+                                            }}
+                                        >
+                                            <Download size={18} />
+                                        </button>
                                         <button className="preview-icon-btn" onClick={() => setSelectedDoc(null)}><X size={20} /></button>
                                     </div>
                                 </div>
@@ -713,38 +724,35 @@ export default function Vessels() {
                                             </div>
                                         </div>
 
-                                        <div className="doc-visual-placeholder">
-                                            <div className="verified-seal">
-                                                <Check size={24} />
-                                                <span>AUTHORIZED SIGNATURE</span>
+                                        <div className="doc-visual-placeholder" style={{ padding: 0, overflow: 'hidden', background: '#f1f5f9' }}>
+                                            <iframe
+                                                src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf#toolbar=0&navpanes=0&scrollbar=0"
+                                                style={{ width: '100%', height: '100%', border: 'none' }}
+                                                title="Document Preview"
+                                            />
+                                        </div>
+                                        <div className="preview-footer">
+                                            <div className="footer-meta-col">
+                                                <label>SIGNED BY</label>
+                                                <div className="meta-val">
+                                                    <div className="avatar">CA</div>
+                                                    <span>Capt. Anders</span>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                        <div className="preview-zoom-controls" style={{ display: 'none' }}>
-                                            {/* Zoom controls removed for Quick Preview as requested */}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="preview-footer">
-                                    <div className="footer-meta-col">
-                                        <label>SIGNED BY</label>
-                                        <div className="meta-val">
-                                            <div className="avatar">CA</div>
-                                            <span>Capt. Anders</span>
-                                        </div>
-                                    </div>
-                                    <div className="footer-meta-col">
-                                        <label>EXPIRY DATE</label>
-                                        <div className="meta-val">
-                                            <Calendar size={16} color="#F59E0B" />
-                                            <span>Oct 24, 2028</span>
-                                        </div>
-                                    </div>
-                                    <div className="footer-meta-col">
-                                        <label>LAST MODIFIED</label>
-                                        <div className="meta-val">
-                                            <AlertTriangle size={16} color="#64748B" />
-                                            <span>2 days ago</span>
+                                            <div className="footer-meta-col">
+                                                <label>EXPIRY DATE</label>
+                                                <div className="meta-val">
+                                                    <Calendar size={16} color="#F59E0B" />
+                                                    <span>Oct 24, 2028</span>
+                                                </div>
+                                            </div>
+                                            <div className="footer-meta-col">
+                                                <label>LAST MODIFIED</label>
+                                                <div className="meta-val">
+                                                    <AlertTriangle size={16} color="#64748B" />
+                                                    <span>2 days ago</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -842,17 +850,41 @@ export default function Vessels() {
                             {/* Column 3 */}
                             <div className="form-column">
                                 <div className="image-upload-modern">
-                                    <label>Choose file</label>
-                                    <div className="image-preview-container-modern">
-                                        <img src={formData.image} alt="Vessel preview" />
-                                        {isEditing && (
-                                            <div className="upload-overlay-modern" onClick={triggerFileSelect}>
-                                                <Plus size={24} />
-                                                <span>Choose file</span>
+                                    <label>Vessel Image</label>
+                                    <div
+                                        className={`image-preview-container-modern ${!formData.image ? 'no-image' : ''} ${isDraggingFile ? 'dragging' : ''}`}
+                                        onClick={isEditing ? triggerFileSelect : undefined}
+                                        onDragOver={handleDragOver}
+                                        onDragLeave={handleDragLeave}
+                                        onDrop={handleDrop}
+                                    >
+                                        {formData.image ? (
+                                            <>
+                                                <img
+                                                    key={formData.image || 'empty'}
+                                                    src={formData.image}
+                                                    alt="Vessel preview"
+                                                />
+                                                {isEditing && (
+                                                    <div className="upload-overlay-modern">
+                                                        <Plus size={24} />
+                                                        <span>Change image</span>
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="drag-drop-placeholder">
+                                                <div className="upload-icon-circle">
+                                                    <Upload size={32} />
+                                                </div>
+                                                <div className="upload-text">
+                                                    <p className="main-text">Drag and drop file</p>
+                                                    <p className="sub-text">or <span className="highlight">browse</span> from computer</p>
+                                                </div>
                                             </div>
                                         )}
                                     </div>
-                                    {isEditing && <span className="upload-hint">Image should not exceed 10MB</span>}
+                                    {isEditing && <span className="upload-hint">Note: Image should not exceed 10MB</span>}
                                     <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" style={{ display: 'none' }} />
                                 </div>
 
