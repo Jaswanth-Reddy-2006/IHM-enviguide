@@ -63,6 +63,7 @@ export default function DecksView({ vesselName }: { vesselName: string }) {
     });
     const [expandedDeckId, setExpandedDeckId] = useState<string | null>(null);
     const [showAllMaterials, setShowAllMaterials] = useState(false);
+    const [hoveredMaterial, setHoveredMaterial] = useState<{ id: string, pin: { x: number, y: number }, deckId: string } | null>(null);
 
     const [mappedSections, setMappedSections] = useState<MappedSection[]>(() => {
         const saved = localStorage.getItem(`vessel_sections_${vesselName}`);
@@ -437,7 +438,7 @@ export default function DecksView({ vesselName }: { vesselName: string }) {
     };
 
     // Component to show a technical cropped preview of the deck
-    const DeckPreview = ({ rect, fileUrl }: { rect: Rect, fileUrl: string }) => {
+    const DeckPreview = ({ rect, fileUrl, highlightPin }: { rect: Rect, fileUrl: string, highlightPin?: { x: number, y: number } | null }) => {
         const displayWidth = 180;
         const displayHeight = 126;
 
@@ -492,6 +493,38 @@ export default function DecksView({ vesselName }: { vesselName: string }) {
                         filter: 'contrast(1.1) brightness(1.02)'
                     }}
                 />
+
+                {/* Hover Highlight Marker */}
+                {highlightPin && (
+                    <div
+                        className="material-highlight-pulse-mini"
+                        style={{
+                            position: 'absolute',
+                            left: `${(highlightPin.x - rect.x) * uniformScale}px`,
+                            top: `${(highlightPin.y - rect.y) * uniformScale}px`,
+                            width: '12px',
+                            height: '12px',
+                            background: '#00B0FA',
+                            borderRadius: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            boxShadow: '0 0 0 4px rgba(0, 176, 250, 0.3)',
+                            zIndex: 2,
+                            animation: 'pulseHighlight 1.5s infinite'
+                        }}
+                    >
+                        <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '50%',
+                            border: '2px solid #00B0FA',
+                            animation: 'rippleHighlight 1.5s infinite'
+                        }}></div>
+                    </div>
+                )}
             </div>
         );
     };
@@ -672,10 +705,6 @@ export default function DecksView({ vesselName }: { vesselName: string }) {
                                                 <div className="divider-circle-v3">
                                                 </div>
                                             </div>
-                                            <div className="divider-legs-v3">
-                                                <div className="leg-v3 left"></div>
-                                                <div className="leg-v3 right"></div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div className="plus-floating-mini">
@@ -755,7 +784,11 @@ export default function DecksView({ vesselName }: { vesselName: string }) {
                                             <div className="deck-row-header" onClick={() => toggleExpand(deck.id)}>
                                                 <div className="deck-row-icon-box" onClick={(e) => { e.stopPropagation(); openMapping(deck); }}>
                                                     {activePlan ? (
-                                                        <DeckPreview rect={deck.rect} fileUrl={activePlan.url} />
+                                                        <DeckPreview
+                                                            rect={deck.rect}
+                                                            fileUrl={activePlan.url}
+                                                            highlightPin={hoveredMaterial?.deckId === deck.id ? hoveredMaterial.pin : null}
+                                                        />
                                                     ) : (
                                                         <div className="deck-row-icon-placeholder">
                                                             {deck.title.toLowerCase().includes('tank') ? <Layers size={21} /> : <Compass size={21} />}
@@ -848,7 +881,13 @@ export default function DecksView({ vesselName }: { vesselName: string }) {
                                                             return (
                                                                 <>
                                                                     {itemsToShow.map((item: any) => (
-                                                                        <div key={item.id} className="mat-card-v2" onClick={() => openMapping(deck, undefined, item.id)}>
+                                                                        <div
+                                                                            key={item.id}
+                                                                            className="mat-card-v2"
+                                                                            onClick={() => openMapping(deck, undefined, item.id)}
+                                                                            onMouseEnter={() => setHoveredMaterial({ id: item.id, pin: item.pin, deckId: deck.id })}
+                                                                            onMouseLeave={() => setHoveredMaterial(null)}
+                                                                        >
                                                                             <div className="mat-card-header">
                                                                                 <div className="mat-dot-indicator"></div>
                                                                                 <h5>{item.name}</h5>

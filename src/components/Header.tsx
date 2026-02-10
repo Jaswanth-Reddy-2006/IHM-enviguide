@@ -16,9 +16,11 @@ interface HeaderProps {
 export default function Header({
     title,
     userName = 'John Administrator',
-    userRole = 'Admin'
+    userRole = 'Admin',
+    notificationCount
 }: HeaderProps) {
     const [showNotifications, setShowNotifications] = useState(false);
+    // ... rest of state stays internal for simulation
     const [notifList, setNotifList] = useState([
         {
             id: 1,
@@ -55,7 +57,7 @@ export default function Header({
         }
     ]);
 
-    const activeCount = notifList.filter(n => n.unread).length;
+    const activeCount = notificationCount !== undefined ? notificationCount : notifList.filter(n => n.unread).length;
 
     const handleClearAll = () => {
         setNotifList([]);

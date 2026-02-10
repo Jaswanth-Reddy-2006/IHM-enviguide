@@ -320,9 +320,7 @@ export default function MaterialsRecord({ vesselName }: MaterialsRecordProps) {
                             </div>
                         )}
                     </div>
-                </div>
 
-                <div className="header-actions-right">
                     <button
                         className={`filter-btn-icon ${isFilterPanelOpen ? 'active' : ''}`}
                         onClick={() => {
@@ -341,40 +339,42 @@ export default function MaterialsRecord({ vesselName }: MaterialsRecordProps) {
             </div>
 
             {/* Active Filters Row (Dynamic) */}
-            {(thresholdMin > 0 || thresholdMax < 1.0 || selectedParts.length > 0 || selectedZones.length > 0) && (
-                <div className="active-filters-row">
-                    <div className="active-chips-container">
-                        {thresholdMin > 0 || thresholdMax < 1.0 ? (
-                            <div className="filter-chip">
-                                <span>Threshold: {thresholdMin.toFixed(2)}%-{thresholdMax.toFixed(2)}%</span>
-                                <X size={12} onClick={() => { setThresholdMin(0); setThresholdMax(1.0); }} />
-                            </div>
-                        ) : null}
+            {
+                (thresholdMin > 0 || thresholdMax < 1.0 || selectedParts.length > 0 || selectedZones.length > 0) && (
+                    <div className="active-filters-row">
+                        <div className="active-chips-container">
+                            {thresholdMin > 0 || thresholdMax < 1.0 ? (
+                                <div className="filter-chip">
+                                    <span>Threshold: {thresholdMin.toFixed(2)}%-{thresholdMax.toFixed(2)}%</span>
+                                    <X size={12} onClick={() => { setThresholdMin(0); setThresholdMax(1.0); }} />
+                                </div>
+                            ) : null}
 
-                        {selectedParts.map(part => (
-                            <div className="filter-chip" key={part}>
-                                <span>{part}</span>
-                                <X size={12} onClick={() => setSelectedParts(selectedParts.filter(p => p !== part))} />
-                            </div>
-                        ))}
+                            {selectedParts.map(part => (
+                                <div className="filter-chip" key={part}>
+                                    <span>{part}</span>
+                                    <X size={12} onClick={() => setSelectedParts(selectedParts.filter(p => p !== part))} />
+                                </div>
+                            ))}
 
-                        {selectedZones.map(zone => (
-                            <div className="filter-chip" key={zone}>
-                                <span>{zone}</span>
-                                <X size={12} onClick={() => setSelectedZones(selectedZones.filter(z => z !== zone))} />
-                            </div>
-                        ))}
-                        <span className="results-count-text">Showing {filteredMaterials.length} results</span>
+                            {selectedZones.map(zone => (
+                                <div className="filter-chip" key={zone}>
+                                    <span>{zone}</span>
+                                    <X size={12} onClick={() => setSelectedZones(selectedZones.filter(z => z !== zone))} />
+                                </div>
+                            ))}
+                            <span className="results-count-text">Showing {filteredMaterials.length} results</span>
+                        </div>
+                        <div className="clear-all-link" onClick={() => {
+                            setThresholdMin(0); setThresholdMax(1.0);
+                            setSelectedParts([]);
+                            setSelectedZones([]);
+                        }}>
+                            Clear All
+                        </div>
                     </div>
-                    <div className="clear-all-link" onClick={() => {
-                        setThresholdMin(0); setThresholdMax(1.0);
-                        setSelectedParts([]);
-                        setSelectedZones([]);
-                    }}>
-                        Clear All
-                    </div>
-                </div>
-            )}
+                )
+            }
 
             {/* Category Pills Row (Static Selection) */}
             <div className="category-tabs-row">
